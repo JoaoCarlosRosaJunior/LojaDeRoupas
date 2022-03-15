@@ -1,0 +1,48 @@
+{% extends './base.html' %}
+{% load static %}
+{% block title %} Home {% endblock %}
+
+{% block content%}
+<div class="container">
+  <h1 class = "text-center">HOME</h1>
+  <hr>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+      {% for produto in produtos %}
+        <div class="col">
+        <div style="height:150px; width:150px; display: block; margin-left: auto; margin-right: auto;">
+          <img style="height:100%; width:100%; display: block; margin-left: auto; margin-right: auto;"  src="{{produto.imagem.url}}"></img>
+        </div>
+        <div class="card-body">
+          <span class="fs-5 fw-semibold">{{produto.titulo}}</span>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+              <span id="preco_{{produto.id}}" class="font-weight-bold">{{produto.format_preco}}</span>
+              <div class="btn-group" style = "margin-right: 0">
+                  <form action="" method="POST">
+                      {% csrf_token %}
+                  <button name="produto" type="submit" value="{{produto.id}}" class="btn btn-sm btn-outline-primary">Adicionar ao Carrinho</button>
+                  <form>
+              </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {{ room_name|json_script:"room-name" }}  
+      <script>
+        const Socket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/cart/'
+            + {{ user.id }}
+            + '/'
+        );
+        Socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            for(var i = 0; i < data.length; i++){
+                document.querySelector("#preco_"+data[i].pk).innerHTML="R$ " +  data[i].fields.preco.replace(".",",")
+            }
+        };
+        Socket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+    </script>
+{% endblock %}

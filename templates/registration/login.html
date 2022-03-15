@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% if form.errors %}
+    <p>Seu nome de usuário e senha não são válidos.</p>
+  {% endif %}
+
+  {% if next %}
+    {% if user.is_authenticated %}
+      <p>Seu usuário não tem permissão nessa página.</p>
+    {% else %}
+      <p>Por favor, faça login para acessar essa página.</p>
+    {% endif %}
+  {% endif %}
+
+{% load widget_tweaks %}
+<div class="d-flex justify-content-center">
+<div class="text-center" style="width: 300px">
+  <form class="form-signin" data-bitwarden-watching="1" method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <h1 class="h3 mb-3 font-weight-normal">Entre em sua conta</h1>
+    <label for="inputEmail" class="sr-only">Nome de usuário</label>
+    {{ form.username|add_class:"form-control" }}
+    <label for="inputPassword" class="sr-only">Senha</label>
+    {{ form.password|add_class:"form-control" }}
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Lembrar neste computador
+      </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+  </form>
+</div>
+</div>
+
+
+{% endblock %}
