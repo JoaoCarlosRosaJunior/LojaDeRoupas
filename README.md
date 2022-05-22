@@ -1,4 +1,4 @@
-# LojaRoupas2
+# E-commerce with WebSocket
 
 Projeto simples para aplicação de conhecimento em WebSocket.
 
